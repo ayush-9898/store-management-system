@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h2>Dashboard</h2>
+<p>Logged in as: {{ role }}</p>
+
+{% if role == "Admin" %}
+    <h3>Admin Panel</h3>
+    <ul>
+        <li><a href="/staff/">Manage Staff</a></li>
+        <li><a href="/inventory/">Manage Inventory</a></li>
+        <li><a href="/customers/">Manage Customers</a></li>
+    </ul>
+{% endif %}
+
+{% if role == "Manager" %}
+    <h3>Manager Panel</h3>
+    <ul>
+        <li><a href="/billing/">View Sales</a></li>
+        <li><a href="/inventory/">View Inventory</a></li>
+    </ul>
+{% endif %}
+
+{% if role == "Cashier" %}
+    <h3>Cashier Panel</h3>
+    <ul>
+        <li><a href="/billing/create/">Create Invoice</a></li>
+        <li><a href="/customers/">View Customers</a></li>
+    </ul>
+{% endif %}
+
+<br>
+<a href="{% url 'logout' %}">Logout</a>
+
+</body>
+</html>

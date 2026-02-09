@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Staff</title>
+</head>
+<body>
+
+<h2>Add Staff</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <h3>User Info</h3>
+    {{ user_form.as_p }}
+
+    <h3>Staff Info</h3>
+    {{ staff_form.as_p }}
+
+    <button type="submit">Create Staff</button>
+</form>
+
+<a href="{% url 'staff_list' %}">Back</a>
+
+</body>
+</html>

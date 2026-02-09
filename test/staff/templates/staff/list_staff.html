@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff List</title>
+</head>
+<body>
+
+<h2>Staff Members</h2>
+
+<a href="{% url 'add_staff' %}">Add Staff</a>
+
+<table border="1">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Phone</th>
+        <th>Salary</th>
+    </tr>
+
+    {% for staff in staff_members %}
+    <tr>
+        <td>{{ staff.user.username }}</td>
+        <td>{{ staff.user.email }}</td>
+        <td>{{ staff.role }}</td>
+        <td>{{ staff.phone }}</td>
+        <td>{{ staff.salary }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'dashboard' %}">dashboard</a>
+
+</body>
+</html>
