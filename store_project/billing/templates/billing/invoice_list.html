@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoices</title>
+</head>
+<body>
+
+<h2>Invoices</h2>
+
+<a href="{% url 'create_invoice' %}">Create Invoice</a>
+
+<table border="1">
+    <tr>
+        <th>Invoice No</th>
+        <th>Customer</th>
+        <th>Cashier</th>
+        <th>Final Amount</th>
+        <th>Date</th>
+    </tr>
+
+    {% for invoice in invoices %}
+    <tr>
+        <td>{{ invoice.invoice_number }}</td>
+        <td>{{ invoice.customer }}</td>
+        <td>{{ invoice.cashier }}</td>
+        <td>{{ invoice.final_amount }}</td>
+        <td>{{ invoice.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'dashboard' %}">dashboard</a>
+
+</body>
+</html>
