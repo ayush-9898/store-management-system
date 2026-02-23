@@ -27,6 +27,7 @@ class Product(models.Model):
     stock_quantity = models.IntegerField()
     reorder_level = models.IntegerField()
     expiry_date = models.DateField(blank=True, null=True)
+    is_returnable = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

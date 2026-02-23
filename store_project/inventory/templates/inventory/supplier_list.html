@@ -3,28 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products — PEP Store</title>
+    <title>Suppliers — PEP Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #eaedf2; --surface: #ffffff; --surface2: #f2f4f8;
-            --border: #d8dce8; --text: #1a1d2e; --muted: #7a84a0;
-            --accent: #5b8cff; --accent-lt: #e8eeff;
-        }
+        :root { --bg:#eaedf2; --surface:#ffffff; --surface2:#f2f4f8; --border:#d8dce8; --text:#1a1d2e; --muted:#7a84a0; --accent:#5b8cff; --accent-lt:#e8eeff; }
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:40px 24px; }
-        .wrap { max-width:1000px; margin:0 auto; animation:up 0.4s ease; }
+        .wrap { max-width:900px; margin:0 auto; animation:up 0.4s ease; }
         @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
         .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:13px; font-weight:500; margin-bottom:12px; transition:color 0.2s; }
         .back-link:hover { color:var(--text); }
         .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
         .page-title { font-size:24px; font-weight:800; letter-spacing:-0.02em; }
-        .header-btns { display:flex; gap:10px; }
         .btn { display:inline-flex; align-items:center; gap:7px; padding:10px 18px; border-radius:9px; font-size:13px; font-weight:600; text-decoration:none; transition:all 0.18s; cursor:pointer; border:none; font-family:'Plus Jakarta Sans',sans-serif; }
         .btn-primary { background:var(--accent); color:#fff; }
         .btn-primary:hover { background:#3a6fe0; transform:translateY(-1px); box-shadow:0 4px 14px rgba(91,140,255,0.3); }
-        .btn-outline { background:transparent; color:var(--accent); border:1px solid var(--accent); }
-        .btn-outline:hover { background:var(--accent-lt); }
         .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
         table { width:100%; border-collapse:collapse; }
         thead { background:var(--surface2); }
@@ -33,13 +26,10 @@
         tr:last-child td { border-bottom:none; }
         tbody tr { transition:background 0.15s; }
         tbody tr:hover { background:var(--surface2); }
-        .product-name { font-weight:600; }
-        .sku-badge { font-size:11.5px; font-weight:600; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:2px 8px; border-radius:5px; font-family:monospace; }
-        .price { font-weight:600; }
-        .stock-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
-        .stock-ok   { background:#dcfce7; color:#16a34a; }
-        .stock-low  { background:#fef9c3; color:#a16207; }
-        .stock-out  { background:#fee2e2; color:#dc2626; }
+        .sup-cell { display:flex; align-items:center; gap:10px; }
+        .sup-avatar { width:32px; height:32px; border-radius:8px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+        .sup-name { font-weight:600; }
+        .email-text { font-size:12.5px; color:var(--muted); }
         .action-cell { display:flex; gap:7px; }
         .btn-edit { display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:7px; font-size:12px; font-weight:600; text-decoration:none; background:var(--accent-lt); color:var(--accent); border:1px solid #c5d4ff; transition:all 0.18s; }
         .btn-edit:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
@@ -54,61 +44,49 @@
 <body>
 <div class="wrap">
 
-    <a href="{% url 'dashboard' %}" class="back-link">
+    <a href="{% url 'product_list' %}" class="back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-        Back to Dashboard
+        Back to Products
     </a>
 
     <div class="page-header">
-        <div class="page-title">Products</div>
-        <div class="header-btns">
-            <a href="{% url 'supplier_list' %}" class="btn btn-outline">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Suppliers
-            </a>
-            <a href="{% url 'add_product' %}" class="btn btn-primary">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Product
-            </a>
-        </div>
+        <div class="page-title">Suppliers</div>
+        <a href="{% url 'add_supplier' %}" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Supplier
+        </a>
     </div>
 
     <div class="card">
-        {% if products %}
+        {% if suppliers %}
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>SKU</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
+                    <th>Supplier</th>
+                    <th>Phone</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for product in products %}
+                {% for supplier in suppliers %}
                 <tr>
-                    <td class="product-name">{{ product.name }}</td>
-                    <td><span class="sku-badge">{{ product.SKU }}</span></td>
-                    <td>{{ product.category }}</td>
-                    <td class="price">₹ {{ product.price }}</td>
                     <td>
-                        {% if product.stock_quantity == 0 %}
-                            <span class="stock-badge stock-out">Out of Stock</span>
-                        {% elif product.stock_quantity <= product.reorder_level %}
-                            <span class="stock-badge stock-low">{{ product.stock_quantity }} — Low</span>
-                        {% else %}
-                            <span class="stock-badge stock-ok">{{ product.stock_quantity }}</span>
-                        {% endif %}
+                        <div class="sup-cell">
+                            <div class="sup-avatar">{{ supplier.name|first|upper }}</div>
+                            <div>
+                                <div class="sup-name">{{ supplier.name }}</div>
+                                <div class="email-text">{{ supplier.email }}</div>
+                            </div>
+                        </div>
                     </td>
+                    <td>{{ supplier.phone }}</td>
                     <td>
                         <div class="action-cell">
-                            <a href="{% url 'update_product' product.pk %}" class="btn-edit">
+                            <a href="{% url 'update_supplier' supplier.pk %}" class="btn-edit">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                 Edit
                             </a>
-                            <a href="{% url 'delete_product' product.pk %}" class="btn-delete">
+                            <a href="{% url 'delete_supplier' supplier.pk %}" class="btn-delete">
                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
                                 Delete
                             </a>
@@ -120,9 +98,9 @@
         </table>
         {% else %}
         <div class="empty">
-            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            <strong>No products yet</strong>
-            <span>Add your first product to get started.</span>
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <strong>No suppliers yet</strong>
+            <span>Add your first supplier to get started.</span>
         </div>
         {% endif %}
     </div>
