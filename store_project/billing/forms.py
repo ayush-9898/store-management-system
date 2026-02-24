@@ -19,7 +19,7 @@ class InvoiceForm(forms.Form):
 
     # New customer fields
     new_customer_name = forms.CharField(required=False)
-    new_customer_email = forms.EmailField(required=False)
+    # new_customer_email = forms.EmailField(required=False)
     new_customer_phone = forms.CharField(required=False)
 
     discount = forms.DecimalField(required=False, initial=0)

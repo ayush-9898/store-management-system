@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Staff List</title>
@@ -30,5 +30,189 @@
 </table>
 <a href="{% url 'dashboard' %}">dashboard</a>
 
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eaedf2;
+            --surface: #ffffff;
+            --surface2: #f2f4f8;
+            --border: #d8dce8;
+            --text: #1a1d2e;
+            --muted: #7a84a0;
+            --accent: #5b8cff;
+            --accent-lt: #e8eeff;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        .wrap { max-width: 960px; margin: 0 auto; animation: up 0.4s ease; }
+
+        @keyframes up {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--muted); text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            margin-bottom: 12px; transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--text); }
+
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+        }
+
+        .page-title { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 9px;
+            font-size: 13.5px; font-weight: 600;
+            text-decoration: none; transition: all 0.18s;
+            cursor: pointer; border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #3a6fe0; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(91,140,255,0.3); }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--surface2); }
+        th {
+            padding: 13px 20px; text-align: left;
+            font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            color: var(--muted); border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 14px 20px; font-size: 13.5px;
+            border-bottom: 1px solid var(--border); vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr { transition: background 0.15s; }
+        tbody tr:hover { background: var(--surface2); }
+
+        /* User cell with avatar */
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .avatar {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; flex-shrink: 0;
+        }
+        .username { font-weight: 600; }
+        .email { font-size: 12px; color: var(--muted); }
+
+        /* Role badge */
+        .role-badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+        .role-admin   { background: #e8eeff; color: #3a6fe0; }
+        .role-manager { background: #e0f5ff; color: #0284c7; }
+        .role-cashier { background: #dcfce7; color: #16a34a; }
+
+        .salary { font-weight: 600; }
+
+        .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+        .empty svg { opacity: 0.25; margin-bottom: 14px; }
+        .empty strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 5px; }
+        .empty span { font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <a href="{% url 'dashboard' %}" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Dashboard
+    </a>
+
+    <div class="page-header">
+        <div class="page-title">Staff Members</div>
+        <a href="{% url 'add_staff' %}" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Staff
+        </a>
+    </div>
+
+    <div class="card">
+        {% if staff_members %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_members %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="avatar">{{ staff.user.username|first|upper }}</div>
+                            <div>
+                                <div class="username">{{ staff.user.username }}</div>
+                                <div class="email">{{ staff.user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if staff.role == "Admin" %}
+                            <span class="role-badge role-admin">Admin</span>
+                        {% elif staff.role == "Manager" %}
+                            <span class="role-badge role-manager">Manager</span>
+                        {% else %}
+                            <span class="role-badge role-cashier">Cashier</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ staff.phone }}</td>
+                    <td class="salary">₹ {{ staff.salary }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <strong>No staff members yet</strong>
+            <span>Add your first team member to get started.</span>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
 </body>
 </html>

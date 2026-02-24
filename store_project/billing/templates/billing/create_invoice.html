@@ -1,29 +1,230 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Create Invoice</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice — PEP Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eaedf2;
+            --surface: #ffffff;
+            --surface2: #f2f4f8;
+            --border: #d8dce8;
+            --text: #1a1d2e;
+            --muted: #7a84a0;
+            --accent: #5b8cff;
+            --accent-lt: #e8eeff;
+            --error: #dc2626;
+            --error-lt: #fee2e2;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        .wrap { max-width:660px; margin:0 auto; animation: up 0.4s ease; }
+
+        @keyframes up {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .back-link {
+            display:inline-flex; align-items:center; gap:6px;
+            color:var(--muted); text-decoration:none;
+            font-size:13px; font-weight:500;
+            margin-bottom:12px; transition:color 0.2s;
+        }
+        .back-link:hover { color:var(--text); }
+
+        .page-title { font-size:24px; font-weight:800; letter-spacing:-0.02em; margin-bottom:24px; }
+
+        /* Error */
+        .error-box {
+            display:flex; align-items:center; gap:9px;
+            background:var(--error-lt); border:1px solid #fca5a5;
+            border-radius:10px; padding:12px 16px;
+            font-size:13.5px; color:var(--error);
+            margin-bottom:20px; font-weight:500;
+        }
+
+        /* Cards */
+        .card {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:14px; padding:26px;
+            margin-bottom:14px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.04);
+        }
+
+        .card-title {
+            font-size:13px; font-weight:700;
+            text-transform:uppercase; letter-spacing:0.07em;
+            color:var(--muted); margin-bottom:20px;
+            display:flex; align-items:center; gap:8px;
+        }
+        .card-title::after {
+            content:''; flex:1; height:1px; background:var(--border);
+        }
+
+        /* Fields */
+        .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+        .field:last-child { margin-bottom:0; }
+
+        label {
+            font-size:12px; font-weight:600;
+            color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            background:var(--surface2);
+            border:1px solid var(--border);
+            border-radius:8px;
+            padding:10px 13px;
+            color:var(--text);
+            font-size:13.5px;
+            font-family:'Plus Jakarta Sans', sans-serif;
+            width:100%; outline:none;
+            transition:border-color 0.18s, box-shadow 0.18s;
+        }
+        input:focus, select:focus {
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        /* OR divider */
+        .or-row {
+            display:flex; align-items:center; gap:10px;
+            margin:16px 0; color:var(--muted);
+            font-size:12px; font-weight:600;
+            text-transform:uppercase; letter-spacing:0.07em;
+        }
+        .or-row::before, .or-row::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        /* Buttons */
+        .actions { display:flex; gap:10px; margin-top:6px; }
+
+        .btn {
+            display:inline-flex; align-items:center; gap:8px;
+            padding:11px 22px; border-radius:9px;
+            font-size:13.5px; font-weight:600;
+            text-decoration:none; transition:all 0.18s;
+            cursor:pointer; border:none;
+            font-family:'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-primary { background:var(--accent); color:#fff; }
+        .btn-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.3); }
+        .btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+        .btn-ghost:hover { border-color:#c8cde0; color:var(--text); }
+
+        @media(max-width:480px) { .row { grid-template-columns:1fr; } }
+    </style>
 </head>
 <body>
+<div class="wrap">
 
-<h2>Create Invoice</h2>
+    <a href="{% url 'dashboard' %}" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Dashboard
+    </a>
 
-{% if error %}
-<p style="color:red;">{{ error }}</p>
-{% endif %}
+    <div class="page-title">Create Invoice</div>
 
-<form method="POST">
-    {% csrf_token %}
+    {% if error %}
+    <div class="error-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ error }}
+    </div>
+    {% endif %}
 
-    <h3>Invoice Info</h3>
-    {{ invoice_form.as_p }}
+    <form method="POST">
+        {% csrf_token %}
 
-    <h3>Product Info</h3>
-    {{ item_form.as_p }}
+        <!-- Invoice Info -->
+        <div class="card">
+            <div class="card-title">Invoice Info</div>
 
-    <button type="submit">Create Invoice</button>
-</form>
+            <div class="field">
+                <label for="{{ invoice_form.invoice_number.id_for_label }}">Invoice Number</label>
+                {{ invoice_form.invoice_number }}
+            </div>
 
-<a href="{% url 'dashboard' %}">Back</a>
+            <div class="row">
+                <div class="field">
+                    <label for="{{ invoice_form.discount.id_for_label }}">Discount (₹)</label>
+                    {{ invoice_form.discount }}
+                </div>
+                <div class="field">
+                    <label for="{{ invoice_form.tax.id_for_label }}">Tax (₹)</label>
+                    {{ invoice_form.tax }}
+                </div>
+            </div>
+        </div>
 
+        <!-- Customer -->
+        <div class="card">
+            <div class="card-title">Customer</div>
+
+            <div class="field">
+                <label for="{{ invoice_form.customer.id_for_label }}">Select Existing Customer</label>
+                {{ invoice_form.customer }}
+            </div>
+
+            <div class="or-row">or add new customer</div>
+
+            <div class="field">
+                <label for="{{ invoice_form.new_customer_name.id_for_label }}">Full Name</label>
+                {{ invoice_form.new_customer_name }}
+            </div>
+            <div class="row">
+                <!-- <div class="field">
+                    <label for="{{ invoice_form.new_customer_email.id_for_label }}">Email</label>
+                    {{ invoice_form.new_customer_email }}
+                </div> -->
+                <div class="field">
+                    <label for="{{ invoice_form.new_customer_phone.id_for_label }}">Phone</label>
+                    {{ invoice_form.new_customer_phone }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Product -->
+        <div class="card">
+            <div class="card-title">Product</div>
+
+            <div class="field">
+                <label for="{{ item_form.product.id_for_label }}">Select Product</label>
+                {{ item_form.product }}
+            </div>
+            <div class="field">
+                <label for="{{ item_form.quantity.id_for_label }}">Quantity</label>
+                {{ item_form.quantity }}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Create Invoice
+            </button>
+            <a href="{% url 'invoice_list' %}" class="btn btn-ghost">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
 </body>
 </html>

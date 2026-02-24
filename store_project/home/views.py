@@ -3,34 +3,34 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 
-def index(request):
+def index(req):
 
-    if request.user.is_authenticated:
+    if req.user.is_authenticated:
         return redirect('dashboard')
 
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    if req.method == "POST":
+        username = req.POST.get('username')
+        password = req.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(req, username=username, password=password)
 
         if user is not None:
-            login(request, user)
+            login(req, user)
             return redirect('dashboard')
         else:
-            return render(request, 'home/index.html', {
+            return render(req, 'home/index.html', {
                 'error': 'Invalid Username or Password'
             })
 
-    return render(request, 'home/index.html')
+    return render(req, 'home/index.html')
 
 
 @login_required
-def dashboard(request):
-    role = request.user.staff.role
-    return render(request, 'home/dashboard.html', {'role': role})
+def dashboard(req):
+    role = req.user.staff.role
+    return render(req, 'home/dashboard.html', {'role': role})
 
 
-def logout_view(request):
-    logout(request)
+def logout_view(req):
+    logout(req)
     return redirect('home')

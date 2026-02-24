@@ -1,34 +1,152 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Invoices</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices — PEP Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eaedf2;
+            --surface: #ffffff;
+            --surface2: #f2f4f8;
+            --border: #d8dce8;
+            --text: #1a1d2e;
+            --muted: #7a84a0;
+            --accent: #5b8cff;
+            --accent-lt: #e8eeff;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        .wrap { max-width:900px; margin:0 auto; animation: up 0.4s ease; }
+
+        @keyframes up {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .back-link {
+            display:inline-flex; align-items:center; gap:6px;
+            color:var(--muted); text-decoration:none;
+            font-size:13px; font-weight:500;
+            margin-bottom:12px; transition:color 0.2s;
+        }
+        .back-link:hover { color:var(--text); }
+
+        .page-header {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:28px; flex-wrap:wrap; gap:12px;
+        }
+
+        .page-title { font-size:24px; font-weight:800; letter-spacing:-0.02em; }
+
+        .btn {
+            display:inline-flex; align-items:center; gap:8px;
+            padding:10px 20px; border-radius:9px;
+            font-size:13.5px; font-weight:600;
+            text-decoration:none; transition:all 0.18s;
+            cursor:pointer; border:none;
+            font-family:'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-primary { background:var(--accent); color:#fff; }
+        .btn-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.3); }
+
+        .card {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:14px; overflow:hidden;
+            box-shadow:0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        table { width:100%; border-collapse:collapse; }
+        thead { background:var(--surface2); }
+        th {
+            padding:13px 20px; text-align:left;
+            font-size:11px; font-weight:600;
+            text-transform:uppercase; letter-spacing:0.07em;
+            color:var(--muted); border-bottom:1px solid var(--border);
+        }
+        td {
+            padding:14px 20px; font-size:13.5px;
+            border-bottom:1px solid var(--border); vertical-align:middle;
+        }
+        tr:last-child td { border-bottom:none; }
+        tbody tr { transition:background 0.15s; }
+        tbody tr:hover { background:var(--surface2); }
+
+        .inv-no {
+            font-weight:700; font-size:13px; color:var(--accent);
+            background:var(--accent-lt); padding:3px 9px;
+            border-radius:6px; display:inline-block;
+        }
+        .amount { font-weight:600; }
+        .dt { color:var(--muted); font-size:13px; }
+
+        .empty { text-align:center; padding:60px 20px; color:var(--muted); }
+        .empty svg { opacity:0.25; margin-bottom:14px; }
+        .empty strong { display:block; font-size:15px; color:var(--text); margin-bottom:5px; }
+        .empty span { font-size:13px; }
+    </style>
 </head>
 <body>
+<div class="wrap">
 
-<h2>Invoices</h2>
+    <a href="{% url 'dashboard' %}" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Dashboard
+    </a>
 
-<a href="{% url 'create_invoice' %}">Create Invoice</a>
+    <div class="page-header">
+        <div class="page-title">Invoices</div>
+        <a href="{% url 'create_invoice' %}" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Invoice
+        </a>
+    </div>
 
-<table border="1">
-    <tr>
-        <th>Invoice No</th>
-        <th>Customer</th>
-        <th>Cashier</th>
-        <th>Final Amount</th>
-        <th>Date</th>
-    </tr>
+    <div class="card">
+        {% if invoices %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Invoice No.</th>
+                    <th>Customer</th>
+                    <th>Cashier</th>
+                    <th>Final Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td><span class="inv-no">{{ invoice.invoice_number }}</span></td>
+                    <td>{{ invoice.customer }}</td>
+                    <td>{{ invoice.cashier }}</td>
+                    <td class="amount">₹ {{ invoice.final_amount }}</td>
+                    <td class="dt">{{ invoice.created_at|date:"d M Y, H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <strong>No invoices yet</strong>
+            <span>Create your first invoice to get started.</span>
+        </div>
+        {% endif %}
+    </div>
 
-    {% for invoice in invoices %}
-    <tr>
-        <td>{{ invoice.invoice_number }}</td>
-        <td>{{ invoice.customer }}</td>
-        <td>{{ invoice.cashier }}</td>
-        <td>{{ invoice.final_amount }}</td>
-        <td>{{ invoice.created_at }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<a href="{% url 'dashboard' %}">dashboard</a>
-
+</div>
 </body>
 </html>

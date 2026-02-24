@@ -6,17 +6,17 @@ from .forms import UserForm, StaffForm
 from .decorators import role_required
 
 
-def staff_list(request):
+def staff_list(req):
     staff_members = Staff.objects.all()
-    return render(request, 'staff/list_staff.html', {'staff_members': staff_members})
+    return render(req, 'staff/list_staff.html', {'staff_members': staff_members})
 
 
 @role_required(allowed_roles=['Admin'])
-def add_staff(request):
+def add_staff(req):
 
-    if request.method == "POST":
-        user_form = UserForm(request.POST)
-        staff_form = StaffForm(request.POST)
+    if req.method == "POST":
+        user_form = UserForm(req.POST)
+        staff_form = StaffForm(req.POST)
 
         if user_form.is_valid() and staff_form.is_valid():
 
@@ -34,7 +34,7 @@ def add_staff(request):
         user_form = UserForm()
         staff_form = StaffForm()
 
-    return render(request, 'staff/add_staff.html', {
+    return render(req, 'staff/add_staff.html', {
         'user_form': user_form,
         'staff_form': staff_form
     })

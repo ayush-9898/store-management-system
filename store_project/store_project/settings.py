@@ -124,3 +124,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# Session expires when browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Auto logout after 15 minutes of inactivity
+SESSION_COOKIE_AGE = 900  
+
+# Refresh expiry time on every request
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+
+
+# Add these lines to the BOTTOM of settings.py
+
+# Email — Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ayushsahujhs7878@gmail.com'       # ← replace with your Gmail
+EMAIL_HOST_PASSWORD = 'Leosahu@9839'       # ← replace with Gmail App Password (not your normal password)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Who receives the low stock alert email
+LOW_STOCK_ALERT_RECIPIENTS = [
+    'ayushsahujhs7878@gmail.com',
+]

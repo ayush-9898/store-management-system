@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Add Staff</title>
@@ -21,5 +21,161 @@
 
 <a href="{% url 'staff_list' %}">Back</a>
 
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Staff</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eaedf2;
+            --surface: #ffffff;
+            --surface2: #f2f4f8;
+            --border: #d8dce8;
+            --text: #1a1d2e;
+            --muted: #7a84a0;
+            --accent: #5b8cff;
+            --accent-lt: #e8eeff;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        .wrap { max-width: 620px; margin: 0 auto; animation: up 0.4s ease; }
+
+        @keyframes up {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--muted); text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            margin-bottom: 12px; transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--text); }
+
+        .page-title { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 28px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--muted); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .field:last-child { margin-bottom: 0; }
+
+        label {
+            font-size: 12px; font-weight: 600;
+            color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+        }
+
+        input, select {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 13px;
+            color: var(--text);
+            font-size: 13.5px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 100%; outline: none;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(91,140,255,0.12);
+        }
+
+        /* Style Django's auto-generated p tags */
+        p { margin-bottom: 14px; }
+        p:last-child { margin-bottom: 0; }
+        p label {
+            display: block;
+            font-size: 12px; font-weight: 600;
+            color: var(--muted); text-transform: uppercase;
+            letter-spacing: 0.06em; margin-bottom: 6px;
+        }
+
+        .actions { display: flex; gap: 10px; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 22px; border-radius: 9px;
+            font-size: 13.5px; font-weight: 600;
+            text-decoration: none; transition: all 0.18s;
+            cursor: pointer; border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: #3a6fe0; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(91,140,255,0.3); }
+        .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: var(--text); border-color: #b0b8d0; }
+
+        @media(max-width: 480px) { .row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <a href="{% url 'staff_list' %}" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Staff
+    </a>
+
+    <div class="page-title">Add Staff Member</div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-title">User Info</div>
+            {{ user_form.as_p }}
+        </div>
+
+        <div class="card">
+            <div class="card-title">Staff Info</div>
+            {{ staff_form.as_p }}
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Create Staff
+            </button>
+            <a href="{% url 'staff_list' %}" class="btn btn-ghost">Cancel</a>
+        </div>
+    </form>
+
+</div>
 </body>
 </html>
