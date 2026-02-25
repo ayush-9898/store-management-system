@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoices — PEP Store</title>
+    <title>Invoices</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,7 +27,7 @@
             padding: 40px 24px;
         }
 
-        .wrap { max-width:900px; margin:0 auto; animation: up 0.4s ease; }
+        .wrap { max-width:960px; margin:0 auto; animation: up 0.4s ease; }
 
         @keyframes up {
             from { opacity:0; transform:translateY(14px); }
@@ -81,8 +80,11 @@
             border-bottom:1px solid var(--border); vertical-align:middle;
         }
         tr:last-child td { border-bottom:none; }
-        tbody tr { transition:background 0.15s; }
-        tbody tr:hover { background:var(--surface2); }
+        tbody tr {
+            transition:background 0.15s;
+            cursor: pointer;
+        }
+        tbody tr:hover { background: #f0f3ff; }
 
         .inv-no {
             font-weight:700; font-size:13px; color:var(--accent);
@@ -92,10 +94,134 @@
         .amount { font-weight:600; }
         .dt { color:var(--muted); font-size:13px; }
 
+        .click-hint {
+            font-size:11px; color:var(--muted);
+            text-align:right; padding:10px 20px 14px;
+            display:flex; align-items:center; justify-content:flex-end; gap:5px;
+        }
+
         .empty { text-align:center; padding:60px 20px; color:var(--muted); }
         .empty svg { opacity:0.25; margin-bottom:14px; }
         .empty strong { display:block; font-size:15px; color:var(--text); margin-bottom:5px; }
         .empty span { font-size:13px; }
+
+        /* ── Modal ── */
+        .modal-backdrop {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(10,12,25,0.45);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-backdrop.open { display: flex; }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+            animation: modalIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes modalIn {
+            from { opacity:0; transform: scale(0.93) translateY(16px); }
+            to   { opacity:1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 24px 28px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+        }
+
+        .modal-inv-badge {
+            font-size: 12px; font-weight: 700;
+            color: var(--accent); background: var(--accent-lt);
+            padding: 4px 10px; border-radius: 6px;
+            display: inline-block; margin-bottom: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+        .modal-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+
+        .close-btn {
+            width: 34px; height: 34px; border-radius: 8px;
+            background: var(--surface2); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--muted); flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .close-btn:hover { background: #fee2e2; color: #dc2626; border-color:#fecaca; }
+
+        .modal-body { padding: 22px 28px; }
+
+        /* Info grid */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin-bottom: 22px;
+        }
+        .info-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px;
+        }
+        .info-box-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 5px; }
+        .info-box-val { font-size: 14px; font-weight: 600; color: var(--text); }
+
+        /* Items table */
+        .items-section-title {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--muted);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .items-table {
+            width: 100%; border-collapse: collapse;
+            border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+        }
+        .items-table th {
+            padding: 10px 14px;
+            font-size: 10.5px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            color: var(--muted); background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .items-table td {
+            padding: 11px 14px; font-size: 13.5px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .items-table tr:last-child td { border-bottom: none; }
+        .item-name { font-weight: 600; }
+        .item-qty { color: var(--muted); font-size: 12.5px; }
+
+        /* Totals */
+        .totals {
+            margin-top: 18px;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+        .total-row {
+            display: flex; justify-content: space-between;
+            font-size: 13.5px; padding: 4px 0;
+            color: var(--muted);
+        }
+        .total-row.final {
+            font-size: 15px; font-weight: 800;
+            color: var(--text); padding-top: 10px;
+            margin-top: 6px; border-top: 1px dashed var(--border);
+        }
+        .total-row.final span:last-child { color: var(--accent); }
     </style>
 </head>
 <body>
@@ -108,10 +234,12 @@
 
     <div class="page-header">
         <div class="page-title">Invoices</div>
+        {% if role == "Cashier"%}
         <a href="{% url 'create_invoice' %}" class="btn btn-primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             New Invoice
         </a>
+        {% endif%}
     </div>
 
     <div class="card">
@@ -128,16 +256,45 @@
             </thead>
             <tbody>
                 {% for invoice in invoices %}
-                <tr>
+                <tr onclick="openModal({{ invoice.id }})" title="Click to view details">
                     <td><span class="inv-no">{{ invoice.invoice_number }}</span></td>
                     <td>{{ invoice.customer }}</td>
                     <td>{{ invoice.cashier }}</td>
                     <td class="amount">₹ {{ invoice.final_amount }}</td>
                     <td class="dt">{{ invoice.created_at|date:"d M Y, H:i" }}</td>
                 </tr>
+
+                <!-- Embedded data for modal (hidden) -->
+                <script type="application/json" id="inv-data-{{ invoice.id }}">
+                {
+                    "id": {{ invoice.id }},
+                    "number": "{{ invoice.invoice_number }}",
+                    "customer": "{{ invoice.customer }}",
+                    "cashier": "{{ invoice.cashier }}",
+                    "date": "{{ invoice.created_at|date:'d M Y, H:i' }}",
+                    "total_amount": "{{ invoice.total_amount }}",
+                    "discount": "{{ invoice.discount }}",
+                    "tax": "{{ invoice.tax }}",
+                    "final_amount": "{{ invoice.final_amount }}",
+                    "items": [
+                        {% for item in invoice.invoiceitem_set.all %}
+                        {
+                            "product": "{{ item.product.name }}",
+                            "quantity": {{ item.quantity }},
+                            "price": "{{ item.price }}",
+                            "subtotal": "{{ item.subtotal }}"
+                        }{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ]
+                }
+                </script>
                 {% endfor %}
             </tbody>
         </table>
+        <div class="click-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Click any row to view purchase details
+        </div>
         {% else %}
         <div class="empty">
             <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -148,5 +305,111 @@
     </div>
 
 </div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="closeModalBackdrop(event)">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <div>
+                <div class="modal-inv-badge" id="m-inv-no"></div>
+                <div class="modal-title" id="m-customer"></div>
+                <div class="modal-sub" id="m-date"></div>
+            </div>
+            <button class="close-btn" onclick="closeModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-box-label">Customer</div>
+                    <div class="info-box-val" id="m-cust2"></div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Cashier</div>
+                    <div class="info-box-val" id="m-cashier"></div>
+                </div>
+            </div>
+
+            <div class="items-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Items Purchased
+            </div>
+
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="text-align:center">Qty</th>
+                        <th style="text-align:right">Unit Price</th>
+                        <th style="text-align:right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="m-items-body"></tbody>
+            </table>
+
+            <div class="totals">
+                <div class="total-row"><span>Subtotal</span><span id="m-subtotal"></span></div>
+                <div class="total-row"><span>Discount</span><span id="m-discount" style="color:#16a34a"></span></div>
+                <div class="total-row"><span>Tax</span><span id="m-tax"></span></div>
+                <div class="total-row final"><span>Total Paid</span><span id="m-final"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal(id) {
+    const raw = document.getElementById('inv-data-' + id);
+    if (!raw) return;
+    const d = JSON.parse(raw.textContent);
+
+    document.getElementById('m-inv-no').textContent   = '#' + d.number;
+    document.getElementById('m-customer').textContent = d.customer || 'Walk-in Customer';
+    document.getElementById('m-date').textContent     = d.date;
+    document.getElementById('m-cust2').textContent    = d.customer || 'Walk-in Customer';
+    document.getElementById('m-cashier').textContent  = d.cashier;
+    document.getElementById('m-subtotal').textContent = '₹ ' + d.total_amount;
+    document.getElementById('m-discount').textContent = d.discount > 0 ? '− ₹ ' + d.discount : '₹ 0';
+    document.getElementById('m-tax').textContent      = '₹ ' + d.tax;
+    document.getElementById('m-final').textContent    = '₹ ' + d.final_amount;
+
+    const tbody = document.getElementById('m-items-body');
+    tbody.innerHTML = '';
+
+    if (d.items && d.items.length > 0) {
+        d.items.forEach(function(item) {
+            const tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td><div class="item-name">' + item.product + '</div></td>' +
+                '<td style="text-align:center"><span class="item-qty">× ' + item.quantity + '</span></td>' +
+                '<td style="text-align:right">₹ ' + item.price + '</td>' +
+                '<td style="text-align:right;font-weight:600">₹ ' + item.subtotal + '</td>';
+            tbody.appendChild(tr);
+        });
+    } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No items found</td>';
+        tbody.appendChild(tr);
+    }
+
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modal-backdrop').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function closeModalBackdrop(e) {
+    if (e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
+</script>
+
 </body>
 </html>

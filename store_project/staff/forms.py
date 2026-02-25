@@ -14,4 +14,14 @@ class UserForm(forms.ModelForm):
 class StaffForm(forms.ModelForm):
     class Meta:
         model = Staff
-        fields = ['role', 'salary', 'phone', 'joining_date']
+        fields = ['role', 'salary', 'phone']
+
+class UpdateStaffForm(forms.ModelForm):
+    class Meta:
+        model = Staff
+        fields = ['role', 'salary', 'phone']
+
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']

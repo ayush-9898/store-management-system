@@ -1,135 +1,86 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Invoice — PEP Store</title>
+    <title>Create Invoice</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #eaedf2;
-            --surface: #ffffff;
-            --surface2: #f2f4f8;
-            --border: #d8dce8;
-            --text: #1a1d2e;
-            --muted: #7a84a0;
-            --accent: #5b8cff;
-            --accent-lt: #e8eeff;
-            --error: #dc2626;
-            --error-lt: #fee2e2;
+            --bg: #eaedf2; --surface: #ffffff; --surface2: #f2f4f8;
+            --border: #d8dce8; --text: #1a1d2e; --muted: #7a84a0;
+            --accent: #5b8cff; --accent-lt: #e8eeff;
+            --error: #dc2626; --error-lt: #fee2e2;
+            --green: #16a34a; --green-lt: #dcfce7;
         }
-
         *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:40px 24px; }
+        .wrap { max-width:700px; margin:0 auto; animation:up 0.4s ease; }
+        @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 40px 24px;
-        }
-
-        .wrap { max-width:660px; margin:0 auto; animation: up 0.4s ease; }
-
-        @keyframes up {
-            from { opacity:0; transform:translateY(14px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-
-        .back-link {
-            display:inline-flex; align-items:center; gap:6px;
-            color:var(--muted); text-decoration:none;
-            font-size:13px; font-weight:500;
-            margin-bottom:12px; transition:color 0.2s;
-        }
+        .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:13px; font-weight:500; margin-bottom:12px; transition:color 0.2s; }
         .back-link:hover { color:var(--text); }
-
         .page-title { font-size:24px; font-weight:800; letter-spacing:-0.02em; margin-bottom:24px; }
 
-        /* Error */
-        .error-box {
-            display:flex; align-items:center; gap:9px;
-            background:var(--error-lt); border:1px solid #fca5a5;
-            border-radius:10px; padding:12px 16px;
-            font-size:13.5px; color:var(--error);
-            margin-bottom:20px; font-weight:500;
-        }
+        .error-box { display:flex; align-items:center; gap:9px; background:var(--error-lt); border:1px solid #fca5a5; border-radius:10px; padding:12px 16px; font-size:13.5px; color:var(--error); margin-bottom:20px; font-weight:500; }
 
-        /* Cards */
-        .card {
-            background:var(--surface);
-            border:1px solid var(--border);
-            border-radius:14px; padding:26px;
-            margin-bottom:14px;
-            box-shadow:0 2px 10px rgba(0,0,0,0.04);
-        }
+        .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:26px; margin-bottom:14px; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+        .card-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:20px; display:flex; align-items:center; gap:8px; }
+        .card-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-        .card-title {
-            font-size:13px; font-weight:700;
-            text-transform:uppercase; letter-spacing:0.07em;
-            color:var(--muted); margin-bottom:20px;
-            display:flex; align-items:center; gap:8px;
-        }
-        .card-title::after {
-            content:''; flex:1; height:1px; background:var(--border);
-        }
-
-        /* Fields */
         .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
         .field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
         .field:last-child { margin-bottom:0; }
 
-        label {
-            font-size:12px; font-weight:600;
-            color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;
-        }
+        label { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        select {
-            background:var(--surface2);
-            border:1px solid var(--border);
-            border-radius:8px;
-            padding:10px 13px;
-            color:var(--text);
-            font-size:13.5px;
-            font-family:'Plus Jakarta Sans', sans-serif;
-            width:100%; outline:none;
+        input[type="text"], input[type="number"], select {
+            background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+            padding:10px 13px; color:var(--text); font-size:13.5px;
+            font-family:'Plus Jakarta Sans',sans-serif; width:100%; outline:none;
             transition:border-color 0.18s, box-shadow 0.18s;
         }
-        input:focus, select:focus {
-            border-color:var(--accent);
-            box-shadow:0 0 0 3px rgba(99,102,241,0.1);
-        }
+        input:focus, select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,140,255,0.12); }
 
-        /* OR divider */
-        .or-row {
-            display:flex; align-items:center; gap:10px;
-            margin:16px 0; color:var(--muted);
-            font-size:12px; font-weight:600;
-            text-transform:uppercase; letter-spacing:0.07em;
-        }
+        .pct-wrap { position:relative; }
+        .pct-wrap input { padding-right:36px; }
+        .pct-suffix { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:14px; font-weight:700; color:var(--muted); pointer-events:none; }
+
+        .or-row { display:flex; align-items:center; gap:10px; margin:16px 0; color:var(--muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; }
         .or-row::before, .or-row::after { content:''; flex:1; height:1px; background:var(--border); }
 
-        /* Buttons */
-        .actions { display:flex; gap:10px; margin-top:6px; }
+        /* ── Items table ── */
+        .items-head { display:grid; grid-template-columns:1fr 110px 90px 36px; gap:8px; margin-bottom:6px; }
+        .items-head span { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
 
-        .btn {
-            display:inline-flex; align-items:center; gap:8px;
-            padding:11px 22px; border-radius:9px;
-            font-size:13.5px; font-weight:600;
-            text-decoration:none; transition:all 0.18s;
-            cursor:pointer; border:none;
-            font-family:'Plus Jakarta Sans', sans-serif;
-        }
+        .item-row { display:grid; grid-template-columns:1fr 110px 90px 36px; gap:8px; align-items:center; margin-bottom:8px; animation:up 0.25s ease; }
+
+        .item-price-hint { font-size:11.5px; color:var(--muted); margin-top:3px; min-height:16px; }
+
+        .remove-btn { width:32px; height:32px; border-radius:7px; border:1px solid #fca5a5; background:#fee2e2; color:var(--error); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; flex-shrink:0; padding:0; }
+        .remove-btn:hover { background:var(--error); color:#fff; border-color:var(--error); }
+
+        .add-item-btn { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:8px; border:1px dashed var(--accent); background:var(--accent-lt); color:var(--accent); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.18s; margin-top:4px; font-family:'Plus Jakarta Sans',sans-serif; }
+        .add-item-btn:hover { background:#d0dcff; }
+
+        /* ── Summary box ── */
+        .summary-box { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-top:18px; }
+        .summary-row { display:flex; justify-content:space-between; font-size:13px; padding:3px 0; color:var(--muted); }
+        .summary-row.discount { color:var(--green); }
+        .summary-row.final { font-size:15px; font-weight:800; color:var(--text); padding-top:10px; margin-top:8px; border-top:1px dashed var(--border); }
+        .summary-row.final span:last-child { color:var(--accent); }
+
+        .actions { display:flex; gap:10px; margin-top:6px; }
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:11px 22px; border-radius:9px; font-size:13.5px; font-weight:600; text-decoration:none; transition:all 0.18s; cursor:pointer; border:none; font-family:'Plus Jakarta Sans',sans-serif; }
         .btn-primary { background:var(--accent); color:#fff; }
-        .btn-primary:hover { background:#4f46e5; transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.3); }
+        .btn-primary:hover { background:#3a6fe0; transform:translateY(-1px); box-shadow:0 4px 14px rgba(91,140,255,0.3); }
         .btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
         .btn-ghost:hover { border-color:#c8cde0; color:var(--text); }
 
-        @media(max-width:480px) { .row { grid-template-columns:1fr; } }
+        @media(max-width:520px) {
+            .row { grid-template-columns:1fr; }
+            .items-head, .item-row { grid-template-columns:1fr 90px 80px 32px; }
+        }
     </style>
 </head>
 <body>
@@ -149,26 +100,30 @@
     </div>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" id="invoice-form">
         {% csrf_token %}
 
         <!-- Invoice Info -->
         <div class="card">
             <div class="card-title">Invoice Info</div>
-
             <div class="field">
-                <label for="{{ invoice_form.invoice_number.id_for_label }}">Invoice Number</label>
+                <label>Invoice Number</label>
                 {{ invoice_form.invoice_number }}
             </div>
-
             <div class="row">
                 <div class="field">
-                    <label for="{{ invoice_form.discount.id_for_label }}">Discount (₹)</label>
-                    {{ invoice_form.discount }}
+                    <label>Discount</label>
+                    <div class="pct-wrap">
+                        <input type="number" name="discount" id="id_discount" min="0" max="100" step="0.01" value="{{ invoice_form.discount.value|default:'0' }}" placeholder="0">
+                        <span class="pct-suffix">%</span>
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="{{ invoice_form.tax.id_for_label }}">Tax (₹)</label>
-                    {{ invoice_form.tax }}
+                    <label>Tax</label>
+                    <div class="pct-wrap">
+                        <input type="number" name="tax" id="id_tax" min="0" max="100" step="0.01" value="{{ invoice_form.tax.value|default:'0' }}" placeholder="0">
+                        <span class="pct-suffix">%</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,45 +131,48 @@
         <!-- Customer -->
         <div class="card">
             <div class="card-title">Customer</div>
-
             <div class="field">
-                <label for="{{ invoice_form.customer.id_for_label }}">Select Existing Customer</label>
+                <label>Select Existing Customer</label>
                 {{ invoice_form.customer }}
             </div>
-
             <div class="or-row">or add new customer</div>
-
             <div class="field">
-                <label for="{{ invoice_form.new_customer_name.id_for_label }}">Full Name</label>
+                <label>Full Name</label>
                 {{ invoice_form.new_customer_name }}
             </div>
-            <div class="row">
-                <!-- <div class="field">
-                    <label for="{{ invoice_form.new_customer_email.id_for_label }}">Email</label>
-                    {{ invoice_form.new_customer_email }}
-                </div> -->
-                <div class="field">
-                    <label for="{{ invoice_form.new_customer_phone.id_for_label }}">Phone</label>
-                    {{ invoice_form.new_customer_phone }}
-                </div>
+            <div class="field">
+                <label>Phone</label>
+                {{ invoice_form.new_customer_phone }}
             </div>
         </div>
 
-        <!-- Product -->
+        <!-- Items -->
         <div class="card">
-            <div class="card-title">Product</div>
+            <div class="card-title">Items</div>
 
-            <div class="field">
-                <label for="{{ item_form.product.id_for_label }}">Select Product</label>
-                {{ item_form.product }}
+            <div class="items-head">
+                <span>Product</span>
+                <span>Qty</span>
+                <span>Subtotal</span>
+                <span></span>
             </div>
-            <div class="field">
-                <label for="{{ item_form.quantity.id_for_label }}">Quantity</label>
-                {{ item_form.quantity }}
+
+            <div id="items-container"></div>
+
+            <button type="button" class="add-item-btn" onclick="addItemRow()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Item
+            </button>
+
+            <!-- Live summary -->
+            <div class="summary-box">
+                <div class="summary-row"><span>Subtotal</span><span id="s-subtotal">₹ 0.00</span></div>
+                <div class="summary-row discount"><span>Discount (<span id="s-disc-pct">0</span>%)</span><span id="s-discount">− ₹ 0.00</span></div>
+                <div class="summary-row"><span>Tax (<span id="s-tax-pct">0</span>%)</span><span id="s-tax">+ ₹ 0.00</span></div>
+                <div class="summary-row final"><span>Total</span><span id="s-final">₹ 0.00</span></div>
             </div>
         </div>
 
-        <!-- Actions -->
         <div class="actions">
             <button type="submit" class="btn btn-primary">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -224,7 +182,106 @@
         </div>
 
     </form>
-
 </div>
+
+<script>
+const PRODUCTS = {{ products_json|safe }};
+const productMap = {};
+PRODUCTS.forEach(p => productMap[p.id] = p);
+
+let rowCount = 0;
+
+function buildSelect(name, selectedId) {
+    let html = `<select name="${name}" onchange="recalc()" style="width:100%">`;
+    html += `<option value="">— Select product —</option>`;
+    PRODUCTS.forEach(p => {
+        const sel = (selectedId && String(p.id) === String(selectedId)) ? ' selected' : '';
+        html += `<option value="${p.id}"${sel}>${p.name} (₹${p.price})</option>`;
+    });
+    html += '</select>';
+    return html;
+}
+
+function addItemRow(selectedProduct, selectedQty) {
+    const idx = rowCount++;
+    const container = document.getElementById('items-container');
+    const div = document.createElement('div');
+    div.className = 'item-row';
+    div.id = `row-${idx}`;
+    div.innerHTML = `
+        <div>
+            ${buildSelect(`product_${idx}`, selectedProduct)}
+            <div class="item-price-hint" id="hint-${idx}"></div>
+        </div>
+        <input type="number" name="quantity_${idx}" min="1" value="${selectedQty || 1}"
+               oninput="recalc()" style="text-align:center">
+        <div style="font-size:13.5px;font-weight:600;color:var(--text)" id="sub-${idx}">₹ 0.00</div>
+        <button type="button" class="remove-btn" onclick="removeRow(${idx})" title="Remove">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    `;
+    container.appendChild(div);
+    // attach change listener to the new select
+    div.querySelector('select').addEventListener('change', recalc);
+    recalc();
+}
+
+function removeRow(idx) {
+    const row = document.getElementById(`row-${idx}`);
+    if (row) row.remove();
+    recalc();
+}
+
+function recalc() {
+    const container = document.getElementById('items-container');
+    const rows = container.querySelectorAll('.item-row');
+    let subtotal = 0;
+
+    rows.forEach(row => {
+        const sel = row.querySelector('select');
+        const qtyInput = row.querySelector('input[type="number"]');
+        const idx = row.id.replace('row-', '');
+        const hint = document.getElementById(`hint-${idx}`);
+        const subEl = document.getElementById(`sub-${idx}`);
+
+        const productId = sel ? sel.value : '';
+        const qty = parseInt(qtyInput ? qtyInput.value : 1) || 0;
+
+        if (productId && productMap[productId]) {
+            const p = productMap[productId];
+            const price = parseFloat(p.price);
+            const rowSub = price * qty;
+            subtotal += rowSub;
+            if (hint) hint.textContent = `₹ ${price.toFixed(2)} each · ${p.stock} in stock`;
+            if (subEl) subEl.textContent = `₹ ${rowSub.toFixed(2)}`;
+        } else {
+            if (hint) hint.textContent = '';
+            if (subEl) subEl.textContent = '₹ 0.00';
+        }
+    });
+
+    const discPct = parseFloat(document.getElementById('id_discount').value) || 0;
+    const taxPct  = parseFloat(document.getElementById('id_tax').value)      || 0;
+
+    const discAmt = subtotal * discPct / 100;
+    const taxAmt  = subtotal * taxPct  / 100;
+    const final   = subtotal - discAmt + taxAmt;
+
+    document.getElementById('s-subtotal').textContent  = `₹ ${subtotal.toFixed(2)}`;
+    document.getElementById('s-discount').textContent  = `− ₹ ${discAmt.toFixed(2)}`;
+    document.getElementById('s-tax').textContent       = `+ ₹ ${taxAmt.toFixed(2)}`;
+    document.getElementById('s-final').textContent     = `₹ ${final.toFixed(2)}`;
+    document.getElementById('s-disc-pct').textContent  = discPct;
+    document.getElementById('s-tax-pct').textContent   = taxPct;
+}
+
+// Wire up discount/tax inputs to recalc
+document.getElementById('id_discount').addEventListener('input', recalc);
+document.getElementById('id_tax').addEventListener('input', recalc);
+
+// Start with one row
+addItemRow();
+</script>
+
 </body>
 </html>

@@ -1,32 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Add Staff</title>
-</head>
-<body>
-
-<h2>Add Staff</h2>
-
-<form method="POST">
-    {% csrf_token %}
-
-    <h3>User Info</h3>
-    {{ user_form.as_p }}
-
-    <h3>Staff Info</h3>
-    {{ staff_form.as_p }}
-
-    <button type="submit">Create Staff</button>
-</form>
-
-<a href="{% url 'staff_list' %}">Back</a>
-
-</body>
-</html> -->
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -147,9 +118,9 @@
 <body>
 <div class="wrap">
 
-    <a href="{% url 'staff_list' %}" class="back-link">
+    <a href="{% url 'dashboard' %}" class="back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-        Back to Staff
+        Back to dashboard
     </a>
 
     <div class="page-title">Add Staff Member</div>

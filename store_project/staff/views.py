@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from .models import Staff
-from .forms import UserForm, StaffForm
+from .forms import UserForm, StaffForm, UpdateUserForm, UpdateStaffForm
 from .decorators import role_required
 
 
@@ -38,3 +38,49 @@ def add_staff(req):
         'user_form': user_form,
         'staff_form': staff_form
     })
+
+
+@role_required(allowed_roles=['Admin'])
+def update_staff(req,id):
+    try:
+        staff= Staff.objects.get(id=id)
+    except Staff.DoesNotExist:
+        return HttpResponse("staff not found")
+
+    if req.method == "POST":
+        user_form = UpdateUserForm(req.POST, instance=staff.user)
+        staff_form = UpdateStaffForm(req.POST, instance=staff)
+
+        if user_form.is_valid() and staff_form.is_valid():
+            user_form.save()
+            staff_form.save()
+            return redirect('staff_list')
+    else:
+        user_form = UpdateUserForm(instance=staff.user)
+        staff_form = UpdateStaffForm(instance=staff)
+
+    return render(req, 'staff/update_staff.html', {
+        'user_form': user_form,
+        'staff_form': staff_form,
+        'staff': staff,
+    })
+
+
+@role_required(allowed_roles=['Admin'])
+def delete_staff(req,id):
+    try:
+        staff= Staff.objects.get(id=id)
+    except Staff.DoesNotExist:
+        return HttpResponse("staff not found")
+
+    # Prevent admin from deleting themselves
+    if staff.user == req.user:
+        return redirect('staff_list')
+
+    if req.method == "POST":
+        user = staff.user
+        staff.delete()
+        user.delete()
+        return redirect('staff_list')
+
+    return render(req, 'staff/delete_staff.html', {'staff': staff})

@@ -32,7 +32,7 @@ def update_product(req,id):
             form.save()
             return redirect('product_list')
     else:
-        form=updateForm()
+        form=updateForm(instance=product)
     return render(req,'inventory/update_product.html',{'form':form})
 
 
@@ -104,46 +104,44 @@ def send_low_stock_alert(req):
         messages.success(req, 'All products are well stocked. No alert sent.')
         return redirect('product_list')
 
-    # Build email body
-    lines = []
-    lines.append('The following products are at or below their reorder level:\n')
-    lines.append(f'{"Product":<30} {"SKU":<15} {"Stock":>7} {"Reorder":>8} {"Supplier":<20} Status')
-    lines.append('-' * 95)
+    # # Build email body
+    # lines = []
+    # lines.append('The following products are at or below their reorder level:\n')
+    # lines.append(f'{"Product":<30} {"SKU":<15} {"Stock":>7} {"Reorder":>8} {"Supplier":<20} Status')
+    # lines.append('-' * 95)
 
-    for p in low_stock:
-        supplier_name = p.supplier.name if p.supplier else 'N/A'
-        status = 'OUT OF STOCK' if p.stock_quantity == 0 else 'LOW STOCK'
-        lines.append(
-            f'{p.name:<30} {p.SKU:<15} {p.stock_quantity:>7} {p.reorder_level:>8} '
-            f'{supplier_name:<20} [{status}]'
-        )
+    # for p in low_stock:
+    #     supplier_name = p.supplier.name if p.supplier else 'N/A'
+    #     status = 'OUT OF STOCK' if p.stock_quantity == 0 else 'LOW STOCK'
+    #     lines.append(
+    #         f'{p.name:<30} {p.SKU:<15} {p.stock_quantity:>7} {p.reorder_level:>8} '
+    #         f'{supplier_name:<20} [{status}]'
+    #     )
 
-    lines.append(f'\nTotal products needing attention: {low_stock.count()}')
-    lines.append('\nThis is an alert from PEP Store Management System.')
+    # lines.append(f'\nTotal products needing attention: {low_stock.count()}')
+    # lines.append('\nThis is an alert from PEP Store Management System.')
 
-    body = '\n'.join(lines)
-    subject = f'[PEP Store] ⚠ Low Stock Alert — {low_stock.count()} product(s) need restocking'
+    # body = '\n'.join(lines)
+    # subject = f'[PEP Store] ⚠ Low Stock Alert — {low_stock.count()} product(s) need restocking'
 
-    recipients = getattr(settings, 'LOW_STOCK_ALERT_RECIPIENTS', [])
-    if not recipients:
-        messages.error(req, 'LOW_STOCK_ALERT_RECIPIENTS is not set in settings.py.')
-        return redirect('product_list')
+    # recipients = getattr(settings, 'LOW_STOCK_ALERT_RECIPIENTS', [])
+    # if not recipients:
+    #     messages.error(req, 'LOW_STOCK_ALERT_RECIPIENTS is not set in settings.py.')
+    #     return redirect('product_list')
 
-    try:
-        send_mail(
-            subject=subject,
-            message=body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=recipients,
-            fail_silently=False,
-        )
-        messages.success(
-            req,
-            f'Low stock alert sent to {", ".join(recipients)} — {low_stock.count()} product(s) reported.'
-        )
-    except Exception as e:
-        messages.error(req, f'Failed to send email: {e}')
+    # try:
+    #     send_mail(
+    #         subject=subject,
+    #         message=body,
+    #         from_email=settings.DEFAULT_FROM_EMAIL,
+    #         recipient_list=recipients,
+    #         fail_silently=False,
+    #     )
+    #     messages.success(
+    #         req,
+    #         f'Low stock alert sent to {", ".join(recipients)} — {low_stock.count()} product(s) reported.'
+    #     )
+    # except Exception as e:
+    #     messages.error(req, f'Failed to send email: {e}')
 
-    return redirect('product_list')
-
-
+    # return redirect('product_list')
